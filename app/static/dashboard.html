@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunQuest Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .logout {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .user-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-info h2 {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .user-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .status-section {
+            margin-bottom: 30px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            margin-bottom: 30px;
+        }
+
+        .status-emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .status-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .status-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .allowed {
+            border-left: 4px solid #28a745;
+        }
+
+        .blocked {
+            border-left: 4px solid #dc3545;
+        }
+
+        .progress-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .goal-edit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .edit-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .edit-btn:hover {
+            color: #333;
+        }
+
+        .goal-input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .save-btn, .cancel-btn {
+            background: none;
+            border: 1px solid #dee2e6;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .save-btn {
+            color: #28a745;
+            border-color: #28a745;
+        }
+
+        .save-btn:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        .cancel-btn {
+            color: #666;
+        }
+
+        .cancel-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid #dee2e6;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            border-color: #333;
+            color: #333;
+        }
+
+        .btn.primary {
+            background: #333;
+            border-color: #333;
+            color: white;
+        }
+
+        .btn.primary:hover {
+            background: #555;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .progress-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .user-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">RunQuest</div>
+            <a href="#" class="logout">Logout</a>
+        </header>
+
+        <section class="user-section">
+            <div class="user-avatar" id="userAvatar">JD</div>
+            <div class="user-info">
+                <h2 id="userName">John Doe</h2>
+                <p id="userEmail">john.doe@email.com</p>
+            </div>
+        </section>
+
+        <section class="status-section">
+            <div class="status-card" id="statusCard">
+                <span class="status-emoji" id="statusEmoji">🔒</span>
+                <h1 class="status-title" id="statusTitle">Steam Blocked</h1>
+                <p class="status-subtitle" id="statusSubtitle">Complete your daily run to unlock gaming</p>
+            </div>
+        </section>
+
+        <section class="progress-section">
+            <div class="metric-card">
+                <div class="metric-number" id="distanceThisWeek">0.0</div>
+                <div class="metric-label">Miles this week</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" id="goalDistance">5.0</div>
+                <div class="metric-label">Miles goal</div>
+                <div class="goal-edit">
+                    <div id="goalDisplay">
+                        <button class="edit-btn" onclick="editGoal()" title="Edit goal">✏️</button>
+                    </div>
+                    <div id="goalEdit" class="hidden">
+                        <input type="number" class="goal-input" id="goalInput" step="0.1" min="0.1">
+                        <button class="save-btn" onclick="saveGoal()">Save</button>
+                        <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="metric-card">
+            <div class="metric-label" style="margin-bottom: 10px;">Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div style="color: #666; font-size: 0.9rem; margin-top: 10px;">
+                <span id="progressText">0% complete</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <div class="actions">
+                <button class="btn" onclick="refreshStatus()">Refresh Status</button>
+                <button class="btn primary" onclick="openStrava()">View on Strava</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
