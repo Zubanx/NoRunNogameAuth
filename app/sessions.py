@@ -26,3 +26,14 @@ def delete_session(session_id: str) -> bool:
         del _session_store[session_id]
         return True
     return False
+
+def update_session_tokens(session_id: str, access_token: str, refresh_token: str, expires_at:datetime) -> bool:
+    session = get_session(session_id)
+    if session:
+        session["strava_access_token"] = access_token
+        session["strava_refresh_token"] = refresh_token
+        session["expires_at"] = expires_at
+        return True
+    return False
+    
+    

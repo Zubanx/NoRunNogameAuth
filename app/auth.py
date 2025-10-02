@@ -20,7 +20,7 @@ def exchange_code_for_token(code: str) -> dict:
     #Exchanges authorization code for access token and user data.
     #Raises Exception if the exchange fails.
     
-    params = {
+    data = {
         "client_id": config.CLIENT_ID,
         "client_secret": config.CLIENT_SECRET,
         "code": code,
@@ -29,12 +29,29 @@ def exchange_code_for_token(code: str) -> dict:
     }
     
     try:
-        response = requests.post(config.STRAVA_TOKEN_URL, data=params)
+        response = requests.post(config.STRAVA_TOKEN_URL, data=data)
         
         if response.status_code == 200:
             return response.json()
         else:
             raise Exception(f"Strava token exchange failed: {response.status_code} - {response.text}")
             
+    except requests.RequestException as e:
+        raise Exception(f"Failed to connect to Strava: {str(e)}")
+    
+
+def refresh_access_token(refresh_token:str) -> dict:
+    data = {
+        "client_id": config.CLIENT_ID,
+        "client_secret": config.CLIENT_SECRET,
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token
+    }
+    try:
+        response = requests.post(config.STRAVA_TOKEN_URL, data=data)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception(f"Strava token exchange failed: {response.status_code} - {response.text}")
     except requests.RequestException as e:
         raise Exception(f"Failed to connect to Strava: {str(e)}")
