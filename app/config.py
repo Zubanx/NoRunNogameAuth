@@ -14,7 +14,7 @@ STRAVA_AUTHORIZE_URL = "https://www.strava.com/oauth/authorize"
 STRAVA_TOKEN_URL = "https://www.strava.com/oauth/token"
 STRAVA_API_BASE_URL = "https://www.strava.com/api/v3"
 
-SESSION_COOKIE_NAME = "strava_session_id"
+SESSION_COOKIE_NAME = "session_id"
 
 # Validate required environment variables
 if not CLIENT_ID or not CLIENT_SECRET:

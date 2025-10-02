@@ -3,6 +3,7 @@
 const distance = document.getElementById("distanceToday")
 const userName = document.getElementById("userName")
 const milesThisWeek = document.getElementById("distanceThisWeek")
+const logoutBtn = document.querySelector(".logout")
 
 
 async function getUser(){
@@ -16,7 +17,6 @@ async function getUser(){
         const firstName = userData['firstname']
         const lastName = userData['lastname']
         const fullName = firstName + " " + lastName
-        console.log(fullName)
         userName.textContent = fullName
     }catch (error){
         console.log("Error fetching user:", error)
@@ -41,6 +41,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     await getUser(); // Load user data when page is ready
     await getMilesThisWeek();
 });
+
+logoutBtn.addEventListener('click', async function(){
+    try{
+        const response = await fetch('http://127.0.0.1:8000/logout', {
+            method: 'POST'
+        });
+        if(response.ok){
+            window.location.href = '/';
+        }
+    } catch(e){
+        console.log("Logout failed", e)
+    }
+})
 
 
 

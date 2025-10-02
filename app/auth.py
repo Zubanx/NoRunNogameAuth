@@ -4,7 +4,7 @@ import requests
 
 
 def get_strava_auth_url() -> str:
-    """Builds the URL to redirect users to Strava's authorization page."""
+    #Builds the URL to redirect users to Strava's authorization page
     params = {
         "client_id": config.CLIENT_ID,
         "redirect_uri": config.REDIRECT_URI,
@@ -17,10 +17,9 @@ def get_strava_auth_url() -> str:
 
     
 def exchange_code_for_token(code: str) -> dict:
-    """
-    Exchanges authorization code for access token and user data.
-    Raises Exception if the exchange fails.
-    """
+    #Exchanges authorization code for access token and user data.
+    #Raises Exception if the exchange fails.
+    
     params = {
         "client_id": config.CLIENT_ID,
         "client_secret": config.CLIENT_SECRET,
