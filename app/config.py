@@ -5,6 +5,9 @@ load_dotenv()
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL must be set in .env file")
 
 BASE_URL = "http://127.0.0.1:8000"
 REDIRECT_URI = f"{BASE_URL}/dashboard"
@@ -15,6 +18,8 @@ STRAVA_TOKEN_URL = "https://www.strava.com/oauth/token"
 STRAVA_API_BASE_URL = "https://www.strava.com/api/v3"
 
 SESSION_COOKIE_NAME = "session_id"
+
+
 
 # Validate required environment variables
 if not CLIENT_ID or not CLIENT_SECRET:
