@@ -7,6 +7,7 @@ import sessions
 import config
 from datetime import datetime, timezone, timedelta
 import requests
+import utils
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -80,7 +81,7 @@ async def get_activities(session_id: str = Cookie(None)):
         raise HTTPException(status_code=401, detail="Invalid session")
     
     # Get Strava access token
-    access_token = session["strava_access_token"]
+    access_token = utils.ensure_valid_token(session_id)
     
     # Calculate time range (last 7 days)
     now = datetime.now(timezone.utc)
