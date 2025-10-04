@@ -12,6 +12,7 @@ def ensure_valid_token(session_id: str) -> str:
     now = datetime.now(timezone.utc)
     expires_at = session["expires_at"]
     
+    
     if now >= expires_at - timedelta(minutes=5) :
         refresh_token = session["strava_refresh_token"]
         updated_refresh_token = auth.refresh_access_token(refresh_token)

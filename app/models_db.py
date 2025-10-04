@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, BigInteger
 from database import Base
 from datetime import datetime, timezone
+from sqlalchemy.dialects.postgresql import TIMESTAMP
 
 class User(Base):
     #Stores user preferences (goals, etc) - persists across sessions
@@ -24,5 +25,5 @@ class Session(Base):
     strava_user_id = Column(BigInteger, nullable=False)
     strava_access_token = Column(String, nullable=False)
     strava_refresh_token = Column(String, nullable=False)
-    expires_at = Column(DateTime, nullable=False)
-    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+    expires_at = Column(TIMESTAMP(timezone=True), nullable=False, )
+    created_at = Column(TIMESTAMP(timezone=True), default=datetime.now(timezone.utc))
