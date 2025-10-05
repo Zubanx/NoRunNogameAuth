@@ -8,9 +8,15 @@ import config
 from datetime import datetime, timezone, timedelta
 import requests
 import utils
+from database import SessionLocal
+from models_db import User, Session
+from pydantic import BaseModel
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+class Goal(BaseModel):
+    updated_goal: float
 
 @app.get("/")
 async def root():
@@ -151,3 +157,31 @@ async def check_goal(session_id: str = Cookie(None)):
         
     except requests.RequestException as e:
         raise HTTPException(status_code=502, detail=f"Strava API error: {str(e)}")
+
+@app.put("/update-goal")
+async def update_goal(goal: Goal, session_id: str = Cookie(None)): 
+    #Validation
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    session = sessions.get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=401, detail="Invalid session")
+    if goal.updated_goal <= 0:
+        raise HTTPException(status_code=400, detail="Goal must be positive")
+    
+    db = SessionLocal()
+
+    try:
+        user = db.query(User).filter(User.strava_user_id== session["user_info"]["id"]).first()
+        if not user:
+            raise HTTPException(status_code=404,detail="User not found")
+        user.weekly_goal_miles = goal.updated_goal
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()
+    return await check_goal(session_id)
+        

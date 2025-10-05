@@ -100,13 +100,42 @@ async function saveGoal() {
     }
     
     try {
-        // TODO: Add endpoint to update goal in backend
-        // For now, just update the display
-        document.getElementById("goalDistance").textContent = newGoal.toFixed(1)
-        cancelEdit()
+        const response = await fetch('http://127.0.0.1:8000/update-goal', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ updated_goal: newGoal })
+        })
         
-        // Refresh to recalculate percentages
-        await getMilesThisWeek()
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        
+        // Update all UI elements with returned data
+        milesThisWeek.textContent = data.actual_miles.toFixed(1)
+        goalDistance.textContent = data.goal_miles.toFixed(1)
+        
+        const percentage = Math.min(data.percentage, 100)
+        progressFill.style.width = percentage + '%'
+        progressText.textContent = `${percentage.toFixed(0)}% complete`
+        
+        // Update status card
+        if (data.goal_met) {
+            statusCard.className = 'status-card allowed'
+            statusEmoji.textContent = '🎮'
+            statusTitle.textContent = 'Steam Unlocked!'
+            statusSubtitle.textContent = `Great job! You ran ${data.actual_miles.toFixed(1)} miles this week`
+        } else {
+            statusCard.className = 'status-card blocked'
+            statusEmoji.textContent = '🔒'
+            statusTitle.textContent = 'Steam Blocked'
+            statusSubtitle.textContent = `Run ${data.remaining_miles.toFixed(1)} more miles to unlock gaming`
+        }
+        
+        cancelEdit()
         
     } catch(error) {
         console.log("Error updating goal:", error)
